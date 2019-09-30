@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.w{width: 1200px;margin: 20px auto;}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div class="w">
+				<div class="form-group">
+					<input type="text" placeholder="请输入，点enter完成添加" v-model="aa" @keyup.enter="toAdd" class="form-control" />
+				</div>
+				<div class="form-group clearfix" v-if="list.length>0">
+					<button class="btn btn-sm btn-danger pull-right" @click="delAll">全部删除</button>
+				</div>
+				<table v-if="list.length>0" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>check</th>
+							<th>序号</th>
+							<th>内容</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(item,index) in list">
+							<td>
+								<input type="checkbox" name="" id="" />
+							</td>
+							<td>{{index}}</td>
+							<td>{{item}}</td>
+							<td>
+								<button class="btn btn-sm" @click="del(index)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div v-else class="text-center" >
+					还没有添加任何数据
+				</div>
+			</div>
+		</div>
+		<script>
+			var vm=new Vue({
+				el:'#box',
+				data:{
+					aa:'',
+					list:[]
+				},
+				mounted:function(){
+					var _this=this;
+					var list= JSON.parse(localStorage.getItem('list'));
+			          if(list){
+			          	_this.list=list
+			          }
+				},
+				methods:{
+					del:function(index){
+						/*$(e.target).parent().remove()*/
+						this.list.splice(index,1);
+						localStorage.setItem('list',JSON.stringify(this.list))
+					},
+					delAll:function(){
+						this.list=[];
+						 localStorage.removeItem('list');
+					},
+					toAdd:function(e){
+						
+						var _this=this;
+						if(_this.list.indexOf(_this.aa)<=-1){//数组中不存在
+							_this.list.push(_this.aa);
+							
+						}else{
+							alert('该名已存在')
+						}
+						_this.aa=''
+						localStorage.setItem('list',JSON.stringify(_this.list))
+						
+					},
+				}
+			})
+		</script>
+	</body>
+</html>
